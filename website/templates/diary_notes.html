@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Diary Notes{% endblock %}
+{% block content %}
+  <h1 align="center">{{ diary.name }} Notes</h1>
+  <ul class="list-group list-group-flush" id="notes">
+    {% for note in diary.notes %}
+      <li id="note-{{ note.id }}" class="list-group-item">
+        <div>
+          <span id="note-text-{{ note.id }}">{{ note.data }}</span>
+          <button type="button" class="btn btn-link btn-sm" onClick="editNote({{ note.id }})">Edit</button>
+          <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="edit-form-{{ note.id }}" style="display: none;">
+          <form method="POST" onSubmit="return updateNote({{ note.id }})">
+            <textarea name="edited_note" id="edited-note-{{ note.id }}" class="form-control">{{ note.data }}</textarea>
+            <br />
+            <div align="center">
+              <button type="submit" class="btn btn-primary btn-sm">Save</button>
+              <button type="button" class="btn btn-link btn-sm" onClick="cancelEdit({{ note.id }})">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <form method="POST">
+    <textarea name="note" id="note" class="form-control"></textarea>
+    <br />
+    <div align="center">
+      <button type="submit" class="btn btn-primary">Add Note</button>
+    </div>
+  </form>
+
+  <script>
+    function editNote(noteId) {
+      document.getElementById(`note-text-${noteId}`).style.display = 'none';
+      document.getElementById(`edit-form-${noteId}`).style.display = 'block';
+    }
+  
+    function cancelEdit(noteId) {
+      document.getElementById(`note-text-${noteId}`).style.display = 'inline';
+      document.getElementById(`edit-form-${noteId}`).style.display = 'none';
+    }
+  
+    function updateNote(noteId) {
+      const editedNote = document.getElementById(`edited-note-${noteId}`).value;
+
+      const formData = new FormData();
+      formData.append('editedNote', editedNote);
+
+      fetch(`/diary-notes/edit/${noteId}`, {
+    method: 'PUT',
+    body: formData,
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`note-text-${noteId}`).innerText = data.data.data; // Update text within success callback
+        cancelEdit(noteId);
+      }
+    });
+    }
+
+  </script>
+{% endblock %}

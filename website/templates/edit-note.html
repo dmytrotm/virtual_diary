@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Edit Note{% endblock %}
+{% block content %}
+  <h1 align="center">Edit Note</h1>
+  <form method="POST" action="{{ url_for('views.edit_note', note_id=note.id) }}" enctype="multipart/form-data">
+    <input type="hidden" name="_method" value="PUT">
+    {{ method_field('PUT') }}
+    <textarea name="editedNote" id="note" class="form-control">{{ note.data }}</textarea>
+    <br />
+    <div align="center">
+      <button type="submit" class="btn btn-primary">Update Note</button>
+    </div>
+  </form>
+{% endblock %}

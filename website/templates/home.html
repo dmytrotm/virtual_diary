@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<h1 align="center">Diaries</h1>
+<ul class="list-group list-group-flush" id="diaries">
+    {% for diary in user.diaries %}
+    <li class="list-group-item">
+      <a href="{{ url_for('views.diary_notes', diary_id=diary.id) }}">{{ diary.name }}</a>
+      <button type="button" class="close" onClick="deleteDiary({{ diary.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
+<form method="POST">
+  <textarea name="diary" id="diary" class="form-control"></textarea>
+  <br />
+  <div align="center">
+    <button type="submit" class="btn btn-primary">Add Diary</button>
+  </div>
+</form>
+{% endblock %}
