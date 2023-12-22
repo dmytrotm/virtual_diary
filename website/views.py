@@ -25,23 +25,18 @@ def home():
 @views.route('/delete-note', methods=['DELETE'])
 def delete_note():
     if request.method == 'DELETE':
-        try:
-            note_data = request.get_json()  # Use get_json() to parse JSON data
-            note_id = note_data['noteId']
-            note = Note.query.get(note_id)
+        note_data = json.loads(request.data)
+        note_id = note_data['noteId']
+        note = Note.query.get(note_id)
 
-            if note:
-                diary = Diary.query.get(note.diary_id)
-                if diary and diary.user_id == current_user.id:
-                    db.session.delete(note)
-                    db.session.commit()
-                    return jsonify({})
+        if note:
+            diary = Diary.query.get(note.diary_id)
+            if diary and diary.user_id == current_user.id:
+                db.session.delete(note)
+                db.session.commit()
+                return jsonify({})
 
-        except Exception as e:
-            return jsonify({'error': f'Invalid request format: {str(e)}'}), 400
-
-    return jsonify({'error': 'Invalid request method'}), 405
-
+    return jsonify({'error': 'Invalid request method'})
 
 @views.route('/delete-diary/<int:diary_id>', methods=['DELETE'])
 def delete_diary(diary_id):
