@@ -52,27 +52,33 @@ body {
   margin: 20px 0 15px;
 }
 
+textarea {
+  background: transparent !important;
+  color: #fff !important;
+}
+
 h1 {
   font-size: 36px;
   text-align: center;
 }
 
-.input-box input {
+input {
   width: 100%;
   height: 100%;
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border-radius: 12px;
   outline: none;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 40px;
   font-size: 16px;
-  color: #fff;
+  color: #fff !important;
   padding: 20px 45px 20px 20px;
 }
-.input-box input::placeholder {
-  color: #fff;
+
+input::placeholder {
+  color: #fff !important;
 }
-.input-box i {
+
+i {
   position: absolute;
   right: 20px;
   top: 30%;

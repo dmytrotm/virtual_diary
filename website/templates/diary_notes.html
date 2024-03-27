@@ -65,6 +65,7 @@ content %}
   </ul>
 </div>
 
+{% if diary.user_id == current_user.id %}
 <div class="wrapper">
   <form method="POST">
     <textarea name="note" id="note" class="form-control"></textarea>
@@ -74,6 +75,7 @@ content %}
     </div>
   </form>
 </div>
+{% endif %}
 
 <script>
   function editNote(noteId) {
