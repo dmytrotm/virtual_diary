@@ -7,11 +7,12 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import pymysql
 
 db = SQLAlchemy()
+DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'let\'s keep it a secret'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://12345:123456@localhost/virtual_diary'
+    app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
 
     SWAGGER_URL = '/swagger'
@@ -32,7 +33,7 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    from .models import User, Note
+    from .models import User, Note, Diary
     
     with app.app_context():
         db.create_all()

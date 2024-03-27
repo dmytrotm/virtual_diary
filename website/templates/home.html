@@ -1,21 +1,110 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content%}
+
 <h1 align="center">Diaries</h1>
-<ul class="list-group list-group-flush" id="diaries">
-    {% for diary in user.diaries %}
-    <li class="list-group-item">
-      <a href="{{ url_for('views.diary_notes', diary_id=diary.id) }}">{{ diary.name }}</a>
-      <button type="button" class="close" onClick="deleteDiary({{ diary.id }})">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </li>
-    {% endfor %}
-  </ul>
-<form method="POST">
-  <textarea name="diary" id="diary" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add Diary</button>
+
+<div class="diaries">
+  <div class="wrapper">
+  <!-- Shared diaries -->
+    <h2>Shared Diaries:</h2>
+    <ul class="list-group list-group-flush" id="shared-diaries">
+      {% for shared_diary in shared_diaries %}
+      <li class="list-group-item">
+        <a
+          href="{{ url_for('views.diary_notes', diary_id=shared_diary.diary.id) }}"
+          >{{ shared_diary.diary.name }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
-</form>
+
+  <div class="wrapper">
+    <h2>Your Diaries:</h2>
+    <ul class="list-group list-group-flush" id="diaries">
+      {% for diary in user.diaries %}
+      <li class="list-group-item">
+        <div class="diary">
+          <a href="{{ url_for('views.diary_notes', diary_id=diary.id) }}"
+            >{{ diary.name }}</a
+          >
+
+          <button
+            type="button"
+            class="close"
+            onClick="deleteDiary({{ diary.id }})"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#shareDiaryModal{{ diary.id }}"
+        >
+          Share
+        </button>
+      </li>
+
+      <!-- Modal for sharing diary -->
+      <div
+        class="modal"
+        id="shareDiaryModal{{ diary.id }}"
+        role="dialog"
+        aria-labelledby="shareDiaryModalLabel{{ diary.id }}"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="shareDiaryModalLabel{{ diary.id }}">
+                Share Diary
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form
+                method="POST"
+                action="{{ url_for('views.share_diary', diary_id=diary.id) }}"
+              >
+                <div class="form-group">
+                  <label for="recipientEmail">Recipient Email:</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="recipientEmail"
+                    name="recipient_email"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary">Share</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="wrapper">
+  <!-- Form to add a new diary -->
+  <form method="POST">
+    <textarea name="diary" id="diary" class="form-control"></textarea>
+    <br />
+    <div>
+      <button type="submit" class="btn btn-primary">Add Diary</button>
+    </div>
+  </form>
+</div>
 {% endblock %}

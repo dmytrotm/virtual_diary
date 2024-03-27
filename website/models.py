@@ -1,13 +1,13 @@
-from . import db
+from website import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
-
 
 class Diary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     notes = db.relationship('Note')
+    shared_with = db.relationship('Shared', backref='diary')
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,3 +21,10 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     diaries = db.relationship('Diary')
+    shared = db.relationship('Shared', backref='user')
+
+class Shared(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    diary_id = db.Column(db.Integer, db.ForeignKey('diary.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+

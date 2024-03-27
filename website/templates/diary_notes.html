@@ -1,31 +1,71 @@
-{% extends "base.html" %}
-{% block title %}Diary Notes{% endblock %}
-{% block content %}
-  <h1 align="center">{{ diary.name }} Notes</h1>
+{% extends "base.html" %} {% block title %}Diary Notes{% endblock %} {% block
+content %}
+<h1>{{ diary.name }} Notes</h1>
+<div class="wrapper">
   <ul class="list-group list-group-flush" id="notes">
     {% for note in diary.notes %}
-      <li id="note-{{ note.id }}" class="list-group-item">
-        <div>
-          <span id="note-text-{{ note.id }}">{{ note.data }}</span>
-          <button type="button" class="btn btn-link btn-sm" onClick="editNote({{ note.id }})">Edit</button>
-          <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+    <li id="note-{{ note.id }}" class="list-group-item">
+      <div>
+        <div class="note" id="note-{{ note.id }}-itself">
+          <div class="diary">
+            <span id="note-text-{{ note.id }}">{{ note.data }}</span>
+          </div>
+          {% if diary.user_id == current_user.id %}
+          <button
+            type="button"
+            class="close"
+            onClick="deleteNote({{ note.id }})"
+          >
             <span aria-hidden="true">&times;</span>
           </button>
+          {% endif %}
         </div>
-        <div id="edit-form-{{ note.id }}" style="display: none;">
-          <form method="POST" onSubmit="return updateNote({{ note.id }})">
-            <textarea name="edited_note" id="edited-note-{{ note.id }}" class="form-control">{{ note.data }}</textarea>
-            <br />
-            <div align="center">
-              <button type="submit" class="btn btn-primary btn-sm">Save</button>
-              <button type="button" class="btn btn-link btn-sm" onClick="cancelEdit({{ note.id }})">Cancel</button>
-            </div>
-          </form>
-        </div>
-      </li>
+        {% if diary.user_id == current_user.id %}
+        <button
+          type="button"
+          class="btn btn-link btn-sm"
+          id="edit{{ note.id }}"
+          onClick="editNote({{ note.id }})"
+        >
+          Edit
+        </button>
+        {% endif %}
+      </div>
+      <div id="edit-form-{{ note.id }}" style="display: none">
+        <form method="POST" onSubmit="return updateNote({{ note.id }})">
+          <textarea
+            name="edited_note"
+            id="edited-note-{{ note.id }}"
+            class="form-control"
+          >
+  {{ note.data }}</textarea
+          >
+          <br />
+          <div style="display: flex; justify-content: space-between">
+            <button
+              style="width: 48%"
+              type="submit"
+              class="btn btn-primary btn-sm"
+            >
+              Save
+            </button>
+            <button
+              style="background-color: #ff8080; width: 48%"
+              type="button"
+              class="btn btn-link btn-sm"
+              onClick="cancelEdit({{ note.id }})"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </li>
     {% endfor %}
   </ul>
+</div>
 
+<div class="wrapper">
   <form method="POST">
     <textarea name="note" id="note" class="form-control"></textarea>
     <br />
@@ -33,36 +73,40 @@
       <button type="submit" class="btn btn-primary">Add Note</button>
     </div>
   </form>
+</div>
 
-  <script>
-    function editNote(noteId) {
-      document.getElementById(`note-text-${noteId}`).style.display = 'none';
-      document.getElementById(`edit-form-${noteId}`).style.display = 'block';
-    }
-  
-    function cancelEdit(noteId) {
-      document.getElementById(`note-text-${noteId}`).style.display = 'inline';
-      document.getElementById(`edit-form-${noteId}`).style.display = 'none';
-    }
-  
-    function updateNote(noteId) {
-      const editedNote = document.getElementById(`edited-note-${noteId}`).value;
+<script>
+  function editNote(noteId) {
+    document.getElementById(`note-text-${noteId}`).style.display = "none";
+    document.getElementById(`edit-form-${noteId}`).style.display = "block";
+    document.getElementById(`edit${noteId}`).style.display = "none";
+    document.getElementById(`note-${noteId}-itself`).style.display = "none";
+  }
 
-      const formData = new FormData();
-      formData.append('editedNote', editedNote);
+  function cancelEdit(noteId) {
+    document.getElementById(`note-text-${noteId}`).style.display = "inline";
+    document.getElementById(`edit-form-${noteId}`).style.display = "none";
+    document.getElementById(`edit${noteId}`).style.display = "inline";
+    document.getElementById(`note-${noteId}-itself`).style.display = "inline";
+  }
 
-      fetch(`/diary-notes/edit/${noteId}`, {
-    method: 'PUT',
-    body: formData,
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        document.getElementById(`note-text-${noteId}`).innerText = data.data.data; // Update text within success callback
-        cancelEdit(noteId);
-      }
-    });
-    }
+  function updateNote(noteId) {
+    const editedNote = document.getElementById(`edited-note-${noteId}`).value;
 
-  </script>
+    const formData = new FormData();
+    formData.append("editedNote", editedNote);
+
+    fetch(`/diary-notes/edit/${noteId}`, {
+      method: "PUT",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          document.getElementById(`note-text-${noteId}`).innerText =
+            data.data.data; // Update text within success callback
+        }
+      });
+  }
+</script>
 {% endblock %}

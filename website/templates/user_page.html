@@ -1,38 +1,63 @@
-{% extends "base.html" %}
-
-{% block title %}User Page{% endblock %}
-
-{% block content %}
-  <h1>Welcome, {{ user.first_name }}!</h1>
+{% extends "base.html" %} {% block title %}User Page{% endblock %} {% block
+content %}
+<h1>Welcome, {{ user.first_name }}!</h1>
+<div class="wrapper">
+  <h2>Info</h2>
   <p>Email: {{ user.email }}</p>
-
+</div>
+<div class="wrapper">
   <h2>Manage Your Account</h2>
   <form method="POST" action="/user" class="mb-4">
-    <label for="firstName">First Name</label>
-    <input type="text" id="firstName" name="firstName" value="{{ user.first_name }}" required>
-    
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" value="{{ user.email }}" required>
-    
-    <label for="password">New Password (optional)</label>
-    <input type="password" id="password" name="password">
-    
-    <button type="submit">Update</button>
+    <div class="list">
+      <div class="option">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          value="{{ user.first_name }}"
+          required
+        />
+      </div>
+
+      <div class="option">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="{{ user.email }}"
+          required
+        />
+      </div>
+
+      <div class="option">
+        <label for="password">New Password (optional)</label>
+        <input type="password" id="password" name="password" />
+      </div>
+    </div>
+
+    <button class="btn" type="submit">Update</button>
   </form>
-
+</div>
+<div class="wrapper">
   <h2>Delete Your Account</h2>
-  <button onclick="deleteAccount()">Delete Account</button>
+  <button class="btn" onclick="deleteAccount()">Delete Account</button>
+</div>
 
-  <script>
-    function deleteAccount() {
-      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-        fetch("/user", {
-          method: "DELETE",
-        })
-        .then((_res) => {
-          window.location.href = "/logout";
-        });
-      }
+<script>
+  function deleteAccount() {
+    if (
+      confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      fetch("/user", {
+        method: "DELETE",
+      }).then((_res) => {
+        window.location.href = "/logout";
+      });
     }
-  </script>
+  }
+</script>
 {% endblock %}
