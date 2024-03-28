@@ -6,6 +6,11 @@ content %}
     {% for note in diary.notes %}
     <li id="note-{{ note.id }}" class="list-group-item">
       <div>
+        <div class="above-the-note" id="above-the-note-{{note.id}}">
+          {% if note.edited %}
+          <div class="wrapper edited">Edited</div>
+          {% endif %} {{note.date}}
+        </div>
         <div class="note" id="note-{{ note.id }}-itself">
           <div class="diary">
             <span id="note-text-{{ note.id }}">{{ note.data }}</span>
@@ -83,13 +88,15 @@ content %}
     document.getElementById(`edit-form-${noteId}`).style.display = "block";
     document.getElementById(`edit${noteId}`).style.display = "none";
     document.getElementById(`note-${noteId}-itself`).style.display = "none";
+    document.getElementById(`above-the-note-${noteId}`).style.display = "none";
   }
 
   function cancelEdit(noteId) {
     document.getElementById(`note-text-${noteId}`).style.display = "inline";
     document.getElementById(`edit-form-${noteId}`).style.display = "none";
     document.getElementById(`edit${noteId}`).style.display = "inline";
-    document.getElementById(`note-${noteId}-itself`).style.display = "inline";
+    document.getElementById(`note-${noteId}-itself`).style.display = "flex";
+    document.getElementById(`above-the-note-${noteId}`).style.display = "flex";
   }
 
   function updateNote(noteId) {

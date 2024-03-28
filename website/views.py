@@ -59,6 +59,8 @@ def delete_diary(diary_id):
     return jsonify({'success': False, 'error': 'Diary not found or unauthorized access'})
 
 
+from datetime import datetime
+
 @views.route('/diary-notes/edit/<int:note_id>', methods=['PUT'])
 @login_required
 def edit_note(note_id):
@@ -70,14 +72,19 @@ def edit_note(note_id):
         flash('Note is too short!', category='error')
         return jsonify({'success': False, 'error': 'Note is too short'})
 
+    # Update note data and date
     note.data = new_note_text
+    current_time = datetime.now().strftime('%H:%M:%S')
+    note.date = datetime.combine(datetime.now().date(), datetime.strptime(current_time, '%H:%M:%S').time())
+    note.edited = True
+    
     db.session.commit()
 
     diary = Diary.query.get(diary_id)
 
     flash('Note updated!', category='success')
-    render_template("diary_notes_partial.html", diary=diary)
-    return render_template("diary_notes.html", user=current_user, diary=diary)
+    return render_template("diary_notes_partial.html", diary=diary)
+
 
 @views.route('/diary-notes/<int:diary_id>', methods=['GET', 'POST'])
 @login_required

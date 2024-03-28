@@ -5,7 +5,7 @@
   <form method="POST" action="{{ url_for('views.edit_note', note_id=note.id) }}" enctype="multipart/form-data">
     <input type="hidden" name="_method" value="PUT">
     {{ method_field('PUT') }}
-    <textarea name="editedNote" id="note" class="form-control">{{ note.data }}</textarea>
+    <textarea name="editedNote" id="note" class="form-control">{{note.data}}</textarea>
     <br />
     <div align="center">
       <button type="submit" class="btn btn-primary">Update Note</button>
