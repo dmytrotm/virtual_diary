@@ -22,7 +22,7 @@ body {
 }
 .wrapper {
   width: 100%;
-  background: transparent;
+  background: $background-color_1;
   border: 2px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(9px);
   color: $color_1;
@@ -38,7 +38,7 @@ body {
   .btn {
     width: 100%;
     height: 45px;
-    background: #fff;
+    background: $color_1;
     border: none;
     outline: none;
     border-radius: 40px;
@@ -55,8 +55,8 @@ body {
   }
 }
 textarea {
-  background: transparent !important;
-  color: #fff !important;
+  background: $background-color_1 !important;
+  color: $color_1 !important;
 }
 h1 {
   font-size: 36px;
@@ -65,7 +65,7 @@ h1 {
 input {
   width: 100%;
   height: 100%;
-  background: transparent !important;
+  background: $background-color_1 !important;
   border-radius: 12px;
   outline: none;
   border: 2px solid rgba(255, 255, 255, 0.2);
@@ -99,7 +99,7 @@ i {
   }
 }
 .nav-item {
-  background: transparent;
+  background: $background-color_1;
   border: 2px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(9px);
   color: $color_1;
@@ -151,4 +151,7 @@ i {
 }
 .modal-content {
   color: $color_3;
+}
+#recipientEmail {
+  color: $color_3 !important;
 }

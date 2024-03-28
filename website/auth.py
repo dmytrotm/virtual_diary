@@ -77,9 +77,16 @@ def manage_user():
 
     elif request.method == 'DELETE':
         diaries = Diary.query.filter_by(user_id=user.id).all()
+        shared_with = Shared.query.filter_by(user_id=user.id).all()
+
+        for diary in shared_with:
+            db.session.delete(diary)
 
         for diary in diaries:
             notes = Note.query.filter_by(diary_id=diary.id).all()
+            shared = Shared.query.filter_by(diary_id=diary.id).all()
+            for s in shared:
+                db.session.delete(s)
             for note in notes:
                 db.session.delete(note)
 
